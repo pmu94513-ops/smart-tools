@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>بوت ايزيدي VIP 2.0</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+body {
+  font-family: 'Arial', sans-serif;
+  margin: 0;
+  background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+  color: #fff;
+}
+header {
+  text-align: center;
+  padding: 25px;
+  background: #081c2b;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+header h1 { margin: 0; font-size: 2em; }
+header p { margin: 5px 0; font-style: italic; color: #ffcc00; }
+
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 15px 0;
+}
+nav button {
+  padding: 12px 22px;
+  background: #1f4068;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+nav button:hover { background: #ff7f50; }
+
+section { display: none; padding: 20px; animation: fadeIn 0.5s; }
+section.active { display: block; }
+
+.card {
+  background: rgba(255,255,255,0.08);
+  padding: 20px;
+  margin: 20px 0;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin: 10px 0;
+  border-radius: 6px;
+  border: none;
+}
+button.btn-primary {
+  background: #ff7f50;
+  color: #fff;
+  padding: 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+button.btn-primary:hover { background: #ffa07a; }
+
+footer {
+  text-align: center;
+  padding: 15px;
+  background: #081c2b;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  font-size: 0.9em;
+  color: #ffcc00;
+}
+
+ul { padding-left: 20px; }
+
+@keyframes fadeIn { from {opacity:0;} to {opacity:1;} }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>بوت ايزيدي VIP 2.0</h1>
+  <p>المطور: ايزيدي | النسخة الخارقة 🔥</p>
+</header>
+
+<nav>
+  <button onclick="showSection('translate')">📝 الترجمة</button>
+  <button onclick="showSection('learn')">📚 تعلم اللغة</button>
+  <button onclick="showSection('quiz')">🎯 اختبارات</button>
+  <button onclick="showSection('daily')">✨ كلمة اليوم</button>
+  <button onclick="showSection('age')">⏳ حاسبة العمر</button>
+  <button onclick="showSection('settings')">⚙️ الإعدادات</button>
+</nav>
+
+<!-- الترجمة -->
+<section id="translate" class="active">
+  <h2>ترجمة الكلمات والجمل</h2>
+  <div class="card">
+    <textarea id="textToTranslate" placeholder="اكتب نص هنا..."></textarea>
+    <button class="btn-primary" onclick="translateText()">ترجم</button>
+    <p id="translatedText"></p>
+  </div>
+</section>
+
+<!-- تعلم اللغة -->
+<section id="learn">
+  <h2>تعلم اللغة الإنجليزية</h2>
+  <div class="card">
+    <h3>اختر المستوى:</h3>
+    <select id="levelSelect" onchange="showLesson()">
+      <option value="">-- اختر المستوى --</option>
+      <option value="beginner">مبتدئ</option>
+      <option value="intermediate">متوسط</option>
+      <option value="advanced">متقدم</option>
+      <option value="expert">خبير</option>
+    </select>
+    <div id="lessonContent" style="margin-top: 15px;"></div>
+  </div>
+</section>
+
+<!-- اختبارات -->
+<section id="quiz">
+  <h2>اختبارات تفاعلية</h2>
+  <div class="card">
+    <button class="btn-primary" onclick="startQuiz()">ابدأ الاختبار</button>
+    <div id="quizContent" style="margin-top: 15px;"></div>
+  </div>
+</section>
+
+<!-- كلمة اليوم -->
+<section id="daily">
+  <h2>كلمة اليوم</h2>
+  <div class="card" id="dailyWord">
+    <h3></h3>
+    <p></p>
+  </div>
+</section>
+
+<!-- حاسبة العمر -->
+<section id="age">
+  <h2>حاسبة العمر</h2>
+  <div class="card">
+    <input type="date" id="birthDate">
+    <button class="btn-primary" onclick="calculateAge()">احسب</button>
+    <p id="ageResult"></p>
+  </div>
+</section>
+
+<!-- الإعدادات -->
+<section id="settings">
+  <h2>الإعدادات والحساب</h2>
+  <div class="card">
+    <p>تسجيل الدخول (وهمي) وتغيير إعدادات الموقع:</p>
+    <input type="text" placeholder="اسم المستخدم">
+    <input type="password" placeholder="كلمة المرور">
+    <button class="btn-primary">تسجيل دخول</button>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 بوت ايزيدي VIP
+</footer>
+
+<script>
+// ---- التحكم بالصفحات ----
+function showSection(id){
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ---- قاموس ترجمة حقيقي ----
+const dictionary = {
+  "Hello":"مرحبا",
+  "How are you?":"كيف حالك؟",
+  "Good morning":"صباح الخير",
+  "Thank you":"شكراً",
+  "Apple":"تفاحة",
+  "Book":"كتاب",
+  "Sun":"شمس",
+  "I love coding":"أنا أحب البرمجة",
+  "Weather":"الطقس",
+  "Food":"طعام",
+  "Friend":"صديق",
+  "Happy":"سعيد",
+  "Computer":"حاسوب",
+  "Learning":"تعلم",
+  "Game":"لعبة",
+  "School":"مدرسة",
+  "Language":"لغة",
+  "Challenge":"تحدي",
+  "Programming":"برمجة",
+  "Environment":"بيئة",
+  "Development":"تطوير",
+  "Artificial Intelligence":"الذكاء الاصطناعي",
+  "Blockchain":"سلسلة الكتل",
+  "Cybersecurity":"الأمن السيبراني"
+};
+
+function translateText() {
+  let text = document.getElementById('textToTranslate').value.trim();
+  let translation = dictionary[text] || "❌ لا توجد ترجمة";
+  document.getElementById('translatedText').innerText = "الترجمة: " + translation;
+}
+
+// ---- تعلم اللغة ----
+const lessons = {
+  beginner: ["Apple - تفاحة","Book - كتاب","Sun - شمس","Computer - حاسوب","Friend - صديق"],
+  intermediate: ["Weather - الطقس","I love coding - أنا أحب البرمجة","School - مدرسة","Language - لغة"],
+  advanced: ["Environment - بيئة","Challenge - تحدي","Development - تطوير","Programming - برمجة"],
+  expert: ["Artificial Intelligence - الذكاء الاصطناعي","Blockchain - سلسلة الكتل","Cybersecurity - الأمن السيبراني"]
+};
+
+function showLesson() {
+  let val = document.getElementById('levelSelect').value;
+  let content = document.getElementById('lessonContent');
+  if(val && lessons[val]){
+    content.innerHTML = "<ul>" + lessons[val].map(item => "<li>"+item+"</li>").join("") + "</ul>";
+  } else {
+    content.innerHTML = "";
+  }
+}
+
+// ---- اختبار تفاعلي ----
+const quizQuestions = [
+  {q:"ما ترجمة كلمة 'Book'؟", a:"كتاب", options:["تفاحة","كتاب","شمس"]},
+  {q:"ترجم 'I love coding'", a:"أنا أحب البرمجة", options:["أنا أحب البرمجة","أنا أحب المدرسة","أنا أحب الشمس"]},
+  {q:"ما ترجمة 'Friend'؟", a:"صديق", options:["صديق","عدو","شمس"]},
+  {q:"ما ترجمة 'Environment'؟", a:"بيئة", options:["تطوير","بيئة","تحدي"]}
+];
+
+function startQuiz() {
+  let content = document.getElementById('quizContent');
+  content.innerHTML = "";
+  quizQuestions.forEach((q,i)=>{
+    let html = `<p>${i+1}. ${q.q}</p>`;
+    q.options.forEach(opt=>{
+      html += `<button class="btn-primary" onclick="checkAnswer('${opt}','${q.a}')">${opt}</button> `;
+    });
+    content.innerHTML += html + "<hr>";
+  });
+}
+
+function checkAnswer(selected, correct) {
+  if(selected === correct) alert("✅ إجابة صحيحة!");
+  else alert("❌ إجابة خاطئة!");
+}
+
+// ---- كلمة اليوم ----
+const dailyWords = [
+  {word:"Friend", translate:"صديق", sentence:"I met a new friend today."},
+  {word:"Computer", translate:"حاسوب", sentence:"I love programming on my computer."},
+  {word:"Language", translate:"لغة", sentence:"Learning a new language is fun."},
+  {word:"Programming", translate:"برمجة", sentence:"Programming is fun!"},
+  {word:"Challenge", translate:"تحدي", sentence:"Solve this challenge."}
+];
+
+function showDailyWord() {
+  let index = Math.floor(Math.random()*dailyWords.length);
+  let w = dailyWords[index];
+  let el = document.getElementById('dailyWord');
+  el.innerHTML = `<h3>${w.word} - ${w.translate}</h3><p>مثال: ${w.sentence}</p>`;
+}
+showDailyWord();
+
+// ---- حاسبة العمر ----
+function calculateAge() {
+  let birth = new Date(document.getElementById('birthDate').value);
+  if(!birth.getTime()) return alert("اختر تاريخ صحيح!");
+  let today = new Date();
+  let age = today.getFullYear() - birth.getFullYear();
+  let m = today.getMonth() - birth.getMonth();
+  if(m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
+  let daysLived = Math.floor((today - birth) / (1000*60*60*24));
+  let daysLeft = Math.floor((100*365.25) - daysLived);
+  document.getElementById('ageResult').innerText = 
+    `🎂 عمرك: ${age} سنة\n📅 عشت: ${daysLived} يوم\n⏳ متوقع باقي: ${daysLeft} يوم\n🎯 حظ اليوم: 🌟 استغل الفرصة!`;
+}
+</script>
+
+</body>
+</html>
