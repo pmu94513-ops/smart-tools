@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ايزيدي - تعلم اللغة</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to bottom, #f2f7ff, #dbe7ff);
+    color: #333;
+  }
+  header {
+    background-color: #4a90e2;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    font-size: 24px;
+    font-weight: bold;
+  }
+  nav {
+    display: flex;
+    justify-content: space-around;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding: 10px 0;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+  nav button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+  }
+  section {
+    padding: 20px;
+    display: none;
+  }
+  section.active {
+    display: block;
+  }
+  h2 {
+    color: #4a90e2;
+  }
+  .card {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+  input, select, button {
+    padding: 8px;
+    margin: 5px 0;
+    width: 100%;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+  }
+  footer {
+    text-align: center;
+    padding: 10px;
+    background-color: #f2f7ff;
+    font-size: 14px;
+    margin-top: 20px;
+  }
+  .btn-primary {
+    background-color: #4a90e2;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  .btn-primary:hover {
+    background-color: #357ABD;
+  }
+</style>
+</head>
+<body>
+
+<header>ايزيدي - تعلم اللغة</header>
+
+<nav>
+  <button onclick="showSection('translate')">الترجمة</button>
+  <button onclick="showSection('words')">تعلم كلمات</button>
+  <button onclick="showSection('quiz')">اختبارات</button>
+  <button onclick="showSection('conversation')">محادثة</button>
+  <button onclick="showSection('game')">لعبة الكلمات</button>
+</nav>
+
+<!-- الترجمة -->
+<section id="translate" class="active">
+  <h2>الترجمة الفورية</h2>
+  <div class="card">
+    <textarea id="textToTranslate" placeholder="اكتب نص هنا..."></textarea>
+    <button class="btn-primary" onclick="translateText()">ترجم</button>
+    <p id="translatedText"></p>
+  </div>
+</section>
+
+<!-- تعلم الكلمات -->
+<section id="words">
+  <h2>تعلم كلمات جديدة</h2>
+  <div class="card">
+    <p id="wordDisplay"></p>
+    <button class="btn-primary" onclick="nextWord()">الكلمة التالية</button>
+  </div>
+</section>
+
+<!-- الاختبارات -->
+<section id="quiz">
+  <h2>اختبارات تفاعلية</h2>
+  <div class="card">
+    <p id="quizQuestion"></p>
+    <div id="quizOptions"></div>
+    <p id="quizResult"></p>
+    <button class="btn-primary" onclick="nextQuiz()">السؤال التالي</button>
+  </div>
+</section>
+
+<!-- المحادثة -->
+<section id="conversation">
+  <h2>تعلم المحادثة</h2>
+  <div class="card" id="conversationDisplay"></div>
+  <button class="btn-primary" onclick="nextConversation()">الجملة التالية</button>
+</div>
+</section>
+
+<!-- لعبة الكلمات -->
+<section id="game">
+  <h2>لعبة الكلمات</h2>
+  <div class="card">
+    <p id="scrambledWord"></p>
+    <input type="text" id="guessInput" placeholder="حاول ترتيب الكلمة">
+    <button class="btn-primary" onclick="checkGuess()">تحقق</button>
+    <p id="guessResult"></p>
+    <button class="btn-primary" onclick="nextGameWord()">كلمة جديدة</button>
+  </div>
+</section>
+
+<footer>تطوير الموقع: ايزيدي</footer>
+
+<script>
+  // ---- تبديل الأقسام ----
+  function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  // ---- الترجمة ----
+  function translateText() {
+    let text = document.getElementById('textToTranslate').value;
+    let translated = text.split('').reverse().join(''); // مجرد مثال
+    document.getElementById('translatedText').innerText = "الترجمة: " + translated;
+  }
+
+  // ---- تعلم الكلمات ----
+  let words = [
+    {word:"Apple", meaning:"تفاحة", example:"I eat an apple"},
+    {word:"Book", meaning:"كتاب", example:"I read a book"},
+    {word:"Sun", meaning:"شمس", example:"The sun is bright"}
+  ];
+  let wordIndex = 0;
+  function nextWord() {
+    let w = words[wordIndex];
+    document.getElementById('wordDisplay').innerHTML = `<b>${w.word}</b> = ${w.meaning}<br>مثال: ${w.example}`;
+    wordIndex = (wordIndex + 1) % words.length;
+  }
+  nextWord();
+
+  // ---- الاختبارات ----
+  let quiz = [
+    {q:"What is 'تفاحة'?", options:["Apple","Book","Sun"], answer:"Apple"},
+    {q:"What is 'كتاب'?", options:["Sun","Book","Apple"], answer:"Book"},
+    {q:"What is 'شمس'?", options:["Sun","Book","Apple"], answer:"Sun"}
+  ];
+  let quizIndex = 0;
+  function nextQuiz() {
+    let q = quiz[quizIndex];
+    document.getElementById('quizQuestion').innerText = q.q;
+    let optionsHtml = '';
+    q.options.forEach(opt => {
+      optionsHtml += `<button class="btn-primary" onclick="checkAnswer('${opt}')">${opt}</button> `;
+    });
+    document.getElementById('quizOptions').innerHTML = optionsHtml;
+    document.getElementById('quizResult').innerText = '';
+    quizIndex = (quizIndex + 1) % quiz.length;
+  }
+  function checkAnswer(opt) {
+    let correct = quiz[quizIndex-1].answer;
+    document.getElementById('quizResult').innerText = (opt===correct)?"✅ صحيح":"❌ خطأ";
+  }
+  nextQuiz();
+
+  // ---- المحادثة ----
+  let conversations = [
+    "Hello! - مرحبا!",
+    "How are you? - كيف حالك؟",
+    "Good morning - صباح الخير",
+    "Thank you - شكراً"
+  ];
+  let convIndex = 0;
+  function nextConversation() {
+    document.getElementById('conversationDisplay').innerText = conversations[convIndex];
+    convIndex = (convIndex + 1) % conversations.length;
+  }
+  nextConversation();
+
+  // ---- لعبة الكلمات ----
+  let gameWords = ["Apple","Book","Sun"];
+  let gameIndex = 0;
+  function nextGameWord() {
+    let word = gameWords[gameIndex];
+    document.getElementById('scrambledWord').innerText = word.split('').sort(() => 0.5-Math.random()).join('');
+    document.getElementById('guessResult').innerText = '';
+    document.getElementById('guessInput').value = '';
+    gameIndex = (gameIndex + 1) % gameWords.length;
+  }
+  function checkGuess() {
+    let guess = document.getElementById('guessInput').value;
+    let correct = gameWords[(gameIndex-1+gameWords.length)%gameWords.length];
+    document.getElementById('guessResult').innerText = (guess.toLowerCase()===correct.toLowerCase())?"✅ صحيح":"❌ حاول مرة أخرى";
+  }
+  nextGameWord();
+</script>
+
+</body>
+</html>
